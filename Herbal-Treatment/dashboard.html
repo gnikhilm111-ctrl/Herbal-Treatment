@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — VanaOshadhi</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    /* Hide page until auth is confirmed to prevent flash */
+    body { visibility: hidden; }
+    body.ready { visibility: visible; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><div class="logo-icon">🌿</div>VanaOshadhi</a>
+    <div class="nav-links">
+      <a href="index.html"       class="nav-link">Home</a>
+      <a href="recommender.html" class="nav-link">Get Remedy</a>
+      <a href="herbs.html"       class="nav-link">Herb Library</a>
+      <a href="dashboard.html"   class="nav-link active">Dashboard</a>
+      <a href="profile.html"     class="nav-link">Profile</a>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+      <div class="nav-avatar" id="navAvatar" onclick="window.location='profile.html'" style="cursor:pointer">U</div>
+      <button class="icon-btn" id="logoutBtn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" class="nav-link">Home</a>
+  <a href="recommender.html" class="nav-link">Get Remedy</a>
+  <a href="herbs.html" class="nav-link">Herb Library</a>
+  <a href="profile.html" class="nav-link">Profile</a>
+  <a href="#" class="nav-link" id="mobileLogout">Logout</a>
+</div>
+
+<div class="page-body">
+  <div class="section">
+    <div class="container">
+
+      <!-- Welcome Banner -->
+      <div class="welcome-banner">
+        <div>
+          <h2 id="welcomeMsg">Welcome back!</h2>
+          <p id="welcomeSub">Ready to explore nature's remedies today?</p>
+          <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+            <a href="recommender.html" class="btn btn-accent"><i class="fas fa-search"></i> Find a Remedy</a>
+            <a href="herbs.html" class="btn" style="background:rgba(255,255,255,.15);color:#fff;border:1.5px solid rgba(255,255,255,.3)"><i class="fas fa-book-open"></i> Browse Herbs</a>
+          </div>
+        </div>
+        <div class="welcome-emoji">🌿</div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="dashboard-grid mb-24">
+        <div class="stat-card">
+          <div class="stat-card-icon green"><i class="fas fa-history" style="color:var(--primary)"></i></div>
+          <div class="stat-card-info">
+            <h3 id="statSearches">0</h3>
+            <p>Remedies Found</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon amber"><i class="fas fa-star" style="color:#D97706"></i></div>
+          <div class="stat-card-info">
+            <h3 id="statFeedback">0</h3>
+            <p>Feedbacks Given</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two column layout -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px" id="dashColumns">
+
+        <!-- Recent History -->
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+            <h3 style="font-size:1.1rem"><i class="fas fa-clock" style="color:var(--primary);margin-right:8px"></i>Recent History</h3>
+            <a href="profile.html" style="font-size:.85rem;color:var(--primary)">View all →</a>
+          </div>
+          <div id="recentHistory" class="history-list">
+            <div class="no-results" style="padding:30px 10px">
+              <i class="fas fa-leaf"></i>
+              <p>No searches yet.<br>Find your first remedy!</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Symptom Start -->
+        <div class="card">
+          <h3 style="font-size:1.1rem;margin-bottom:16px"><i class="fas fa-bolt" style="color:var(--accent);margin-right:8px"></i>Quick Start</h3>
+          <p style="font-size:.9rem;margin-bottom:20px">Common ailments — click to go directly to results.</p>
+          <div style="display:flex;flex-direction:column;gap:10px" id="quickStart"></div>
+        </div>
+      </div>
+
+      <!-- Active Reminders -->
+      <div class="card mt-24" id="remindersCard" style="display:none">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+          <h3 style="font-size:1.1rem"><i class="fas fa-bell" style="color:var(--accent);margin-right:8px"></i>Active Reminders</h3>
+          <a href="recommender.html" style="font-size:.85rem;color:var(--primary)">Add new →</a>
+        </div>
+        <div id="remindersList"></div>
+      </div>
+
+      <!-- Health Tip of the Day -->
+      <div class="card mt-24" style="background:linear-gradient(135deg,var(--primary-pale),var(--surface));border-color:var(--primary-light)">
+        <div style="display:flex;align-items:flex-start;gap:20px">
+          <div style="font-size:2.5rem;flex-shrink:0">💡</div>
+          <div>
+            <h3 style="font-size:1rem;margin-bottom:6px;color:var(--primary)">Tip of the Day</h3>
+            <p id="tipText" style="font-size:.92rem;"></p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/translations.js"></script>
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script src="js/reminders.js"></script>
+<script>
+  Auth.onAuthStateChanged(async (fbUser) => {
+    if (!fbUser) {
+      window.location.href = 'login.html';
+      return;
+    }
+
+    document.body.classList.add('ready');
+    let user = await Auth.getUserProfile(fbUser.uid);
+    // Retry once — profile may still be writing after fresh registration
+    if (!user) {
+      await new Promise(r => setTimeout(r, 2000));
+      user = await Auth.getUserProfile(fbUser.uid);
+    }
+    if (!user) { Auth.logout(); return; }
+
+    // Welcome message
+    const hour  = new Date().getHours();
+    const greet = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
+    document.getElementById('welcomeMsg').textContent = `${greet}, ${user.name.split(' ')[0]}! 👋`;
+    document.getElementById('welcomeSub').textContent = `Age ${user.age} · ${user.gender || 'User'} · Member since ${new Date(user.joinedAt).toLocaleDateString('en-IN', { month:'short', year:'numeric' })}`;
+
+    // Stats
+    document.getElementById('statSearches').textContent = (user.history  || []).length;
+    document.getElementById('statFeedback').textContent = (user.feedback || []).length;
+
+    // Active reminders
+    const activeReminders = await Reminders.getActive(fbUser.uid);
+    Reminders.scheduleToday(activeReminders);
+    if (activeReminders.length) {
+      document.getElementById('remindersCard').style.display = '';
+      document.getElementById('remindersList').innerHTML = activeReminders.map(r => `
+        <div class="history-item" style="margin-bottom:10px">
+          <div class="history-icon">🔔</div>
+          <div class="history-info">
+            <div class="history-name">${r.remedyName}</div>
+            <div class="history-date">${r.timesPerDay}× daily · Until ${Reminders.formatDate(r.endDate)}</div>
+            <div class="history-symptoms">${r.times.join(', ')}</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="color:var(--danger)"
+            onclick="cancelReminder('${r.id}', this)">Cancel</button>
+        </div>`).join('');
+    }
+
+    // Recent history
+    const hist = (user.history || []).slice(0, 5);
+    if (hist.length) {
+      document.getElementById('recentHistory').innerHTML = hist.map(h => `
+        <div class="history-item">
+          <div class="history-icon">🌿</div>
+          <div class="history-info">
+            <div class="history-name">${h.topRemedy || 'Herbal Remedy'}</div>
+            <div class="history-date">${formatDate(h.date)}</div>
+            <div class="history-symptoms">${(h.symptoms || []).slice(0, 3).join(', ')}</div>
+          </div>
+          <a href="recommender.html" class="btn btn-ghost btn-sm">Re-check</a>
+        </div>`).join('');
+    }
+  });
+
+  // Quick start cards
+  const quickItems = [
+    { label:'Cold & Runny Nose',    icon:'🤧', symptoms:['runny_nose','dry_cough','mild_fever'] },
+    { label:'Stomach Ache & Gas',   icon:'🫃', symptoms:['bloating','gas','indigestion'] },
+    { label:'Headache',             icon:'🤕', symptoms:['headache'] },
+    { label:'Stress & Poor Sleep',  icon:'😰', symptoms:['stress','insomnia'] },
+    { label:'Sore Throat',          icon:'🤒', symptoms:['sore_throat','dry_cough'] },
+  ];
+  document.getElementById('quickStart').innerHTML = quickItems.map(q => `
+    <button class="history-item" style="cursor:pointer;text-align:left;width:100%"
+      onclick="goQuick(${JSON.stringify(q.symptoms)})">
+      <span style="font-size:1.4rem">${q.icon}</span>
+      <div class="history-info"><div class="history-name">${q.label}</div></div>
+      <i class="fas fa-arrow-right" style="color:var(--primary);font-size:.85rem"></i>
+    </button>`).join('');
+
+  function goQuick(symptoms) {
+    sessionStorage.setItem('vo_quick_symptoms', JSON.stringify(symptoms));
+    window.location.href = 'recommender.html?quick=1';
+  }
+
+  // Tip of the day
+  const tips = [
+    'Drink a cup of warm ginger tea every morning — it kickstarts digestion and boosts immunity throughout the day.',
+    'Tulsi leaves chewed on an empty stomach are known to naturally purify the blood and strengthen lung function.',
+    'A pinch of turmeric in warm milk at bedtime is one of Ayurveda\'s oldest remedies for reducing inflammation and promoting deep sleep.',
+    'Amla is one of the richest sources of Vitamin C — eat one daily to strengthen immunity and improve hair health.',
+    'Applying aloe vera gel daily can reduce acne, soothe skin irritation, and keep your skin naturally hydrated.',
+    'Ashwagandha taken regularly over 6–8 weeks can significantly reduce cortisol levels and improve resilience to stress.',
+    'Fennel seeds (saunf) after meals aren\'t just a tradition — they genuinely aid digestion and prevent bloating.',
+    'Neem twigs have been used as toothbrushes for centuries. Neem toothpaste or rinse kills oral bacteria effectively.',
+    'Steam inhalation with eucalyptus oil 2–3 times daily clears sinuses faster than most over-the-counter nasal sprays.',
+    'Brahmi taken regularly has been shown in multiple studies to improve memory, reduce ADHD symptoms, and lower anxiety.',
+  ];
+  document.getElementById('tipText').textContent = tips[new Date().getDate() % tips.length];
+
+  async function cancelReminder(reminderId, btn) {
+    btn.disabled = true;
+    btn.textContent = '…';
+    const fbUser = firebase.auth().currentUser;
+    await Reminders.cancel(fbUser.uid, reminderId);
+    const row = btn.closest('.history-item');
+    row.style.opacity = '0.4';
+    row.style.pointerEvents = 'none';
+    showToast('Reminder cancelled.', 'info');
+  }
+
+  document.getElementById('mobileLogout')?.addEventListener('click', () => Auth.logout());
+
+  function adjustColumns() {
+    const cols = document.getElementById('dashColumns');
+    if (cols) cols.style.gridTemplateColumns = window.innerWidth < 768 ? '1fr' : '1fr 1fr';
+  }
+  adjustColumns();
+  window.addEventListener('resize', adjustColumns);
+</script>
+</body>
+</html>

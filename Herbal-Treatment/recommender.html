@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Get a Remedy — VanaOshadhi</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body { visibility: hidden; }
+    body.ready { visibility: visible; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><div class="logo-icon">🌿</div>VanaOshadhi</a>
+    <div class="nav-links">
+      <a href="index.html"       class="nav-link">Home</a>
+      <a href="recommender.html" class="nav-link active">Get Remedy</a>
+      <a href="herbs.html"       class="nav-link">Herb Library</a>
+      <a href="dashboard.html"   class="nav-link">Dashboard</a>
+      <a href="profile.html"     class="nav-link">Profile</a>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+      <div class="nav-avatar" id="navAvatar" onclick="window.location='profile.html'">U</div>
+      <button class="icon-btn" id="logoutBtn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html"     class="nav-link">Home</a>
+  <a href="herbs.html"     class="nav-link">Herb Library</a>
+  <a href="dashboard.html" class="nav-link">Dashboard</a>
+  <a href="profile.html"   class="nav-link">Profile</a>
+</div>
+
+<div class="page-body">
+  <div class="page-header">
+    <h1>Find Your Herbal Remedy</h1>
+    <p>Tell us about yourself and your symptoms — we'll match you with nature's best treatments.</p>
+  </div>
+
+  <div class="section">
+    <div class="container">
+      <div class="disclaimer-box">
+        <i class="fas fa-info-circle"></i>
+        <span>These herbal remedies support minor ailments based on traditional Ayurvedic medicine. For serious, persistent, or worsening conditions always consult a doctor. <strong>If you have a medical emergency call 112 immediately.</strong></span>
+      </div>
+
+      <!-- STEPPER -->
+      <div class="stepper-wrapper">
+        <div class="stepper-header" id="stepperHeader">
+          <div class="step-dot active" id="dot1">1</div>
+          <div class="stepper-spacer"></div>
+          <div class="step-dot" id="dot2">2</div>
+          <div class="stepper-spacer"></div>
+          <div class="step-dot" id="dot3">3</div>
+          <div class="stepper-spacer"></div>
+          <div class="step-dot" id="dot4">4</div>
+          <div class="stepper-spacer"></div>
+          <div class="step-dot" id="dot5"><i class="fas fa-check" style="font-size:.7rem"></i></div>
+        </div>
+
+        <!-- STEP 1 — Personal Info -->
+        <div class="step-panel active card" id="step1">
+          <div class="step-title">Tell us about yourself</div>
+          <div class="step-subtitle">This helps us recommend remedies that are safe and appropriate for you.</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+            <div class="form-group">
+              <label class="form-label">Your Name</label>
+              <input class="form-control" id="s1Name" type="text" placeholder="Aarav Kumar" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Your Age <span style="color:var(--danger)">*</span></label>
+              <input class="form-control" id="s1Age" type="number" placeholder="e.g. 28" min="1" max="120" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Gender</label>
+            <select class="form-control" id="s1Gender">
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other / Prefer not to say</option>
+            </select>
+          </div>
+          <div id="s1Error" class="form-error" style="display:none;margin-bottom:8px"></div>
+          <div class="step-nav">
+            <span></span>
+            <button class="btn btn-primary" onclick="goStep(2)">Next <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- STEP 2 — Health Background -->
+        <div class="step-panel card" id="step2">
+          <div class="step-title">Health Background</div>
+          <div class="step-subtitle">Select any pre-existing conditions — this ensures we avoid recommending herbs that could interact with your health.</div>
+          <div class="conditions-grid" id="conditionsGrid"></div>
+          <div class="step-nav">
+            <button class="btn btn-ghost" onclick="goStep(1)"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="btn btn-primary" onclick="goStep(3)">Next <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- STEP 3 — Symptoms -->
+        <div class="step-panel card" id="step3">
+          <div class="step-title">What are you experiencing?</div>
+          <div class="step-subtitle">Select all symptoms you are currently having. The more you select, the better the match.</div>
+
+          <div class="symptom-categories" id="categoryFilters"></div>
+
+          <div class="symptom-search-bar">
+            <i class="fas fa-search search-icon"></i>
+            <input class="form-control" type="text" id="symptomSearch" placeholder="Search symptoms…" oninput="filterSymptoms(this.value)" />
+          </div>
+
+          <div class="symptoms-grid" id="symptomsGrid"></div>
+
+          <div class="selected-symptoms-bar mt-16">
+            <div class="selected-label">Selected symptoms:</div>
+            <div class="selected-chips" id="selectedChips">
+              <span style="font-size:.85rem;color:var(--text-light)">None selected yet — click symptoms above</span>
+            </div>
+          </div>
+
+          <div id="s3Error" class="form-error mt-8" style="display:none"></div>
+          <div class="step-nav">
+            <button class="btn btn-ghost" onclick="goStep(2)"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="btn btn-primary" onclick="goStep(4)">Next <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- STEP 4 — Additional Details -->
+        <div class="step-panel card" id="step4">
+          <div class="step-title">A few more details</div>
+          <div class="step-subtitle">Help us understand severity and duration to fine-tune your recommendations.</div>
+
+          <div class="form-group">
+            <label class="form-label">How long have you had these symptoms?</label>
+            <select class="form-control" id="s4Days">
+              <option value="1">Less than 1 day</option>
+              <option value="2">1–2 days</option>
+              <option value="4" selected>3–5 days</option>
+              <option value="7">About a week</option>
+              <option value="14">1–2 weeks</option>
+              <option value="30">More than 2 weeks</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Overall Severity <span id="severityVal" style="color:var(--primary);font-weight:700">5 / 10</span></label>
+            <input type="range" class="severity-slider" id="s4Severity" min="1" max="10" value="5"
+              oninput="document.getElementById('severityVal').textContent=this.value+' / 10'" />
+            <div class="severity-labels"><span>Mild</span><span>Moderate</span><span>Severe</span></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Any additional notes? <span style="color:var(--text-light)">(optional)</span></label>
+            <textarea class="form-control" id="s4Notes" rows="3" placeholder="e.g. symptoms are worse at night, tried paracetamol already…"></textarea>
+          </div>
+
+          <div class="step-nav">
+            <button class="btn btn-ghost" onclick="goStep(3)"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="btn btn-primary btn-lg" onclick="runAnalysis()"><i class="fas fa-microscope"></i> Analyze & Get Remedies</button>
+          </div>
+        </div>
+
+        <!-- ANALYZING ANIMATION -->
+        <div class="analyzing-screen card" id="analyzingScreen">
+          <span class="spinner-herb">🌿</span>
+          <h3>Analyzing your symptoms…</h3>
+          <p style="color:var(--text-light);margin-top:8px">Matching with our Ayurvedic knowledge base</p>
+          <div class="analyzing-bar mt-24"><div class="analyzing-bar-fill"></div></div>
+          <p style="font-size:.85rem;color:var(--text-light);margin-top:12px" id="analyzeMsg">Checking symptom patterns…</p>
+        </div>
+
+        <!-- STEP 5 — RESULTS -->
+        <div class="step-panel" id="step5">
+          <div class="results-wrapper">
+            <div id="dangerAlerts"></div>
+            <div class="results-header">
+              <div class="results-count" id="resultsCount"></div>
+              <h2>Your Personalised Remedies</h2>
+              <p id="resultsSubtitle" style="color:var(--text-med)"></p>
+            </div>
+            <div id="durationWarning"></div>
+            <div id="remedyResults"></div>
+            <div class="text-center mt-24" style="padding-bottom:20px">
+              <button class="btn btn-outline" onclick="resetForm()"><i class="fas fa-redo"></i> Start Over</button>
+              <a href="dashboard.html" class="btn btn-ghost" style="margin-left:10px"><i class="fas fa-home"></i> Dashboard</a>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /stepper-wrapper -->
+    </div>
+  </div>
+</div>
+
+<!-- Reminder Modal -->
+<div class="modal-overlay" id="reminderModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeReminder()"><i class="fas fa-times"></i></button>
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:2rem;margin-bottom:6px">🔔</div>
+      <h3 id="reminderRemedyName" style="font-size:1.1rem"></h3>
+      <p style="font-size:.85rem;color:var(--text-light);margin-top:4px">We'll remind you to take this remedy daily</p>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">How many times per day?</label>
+      <div style="display:flex;gap:10px">
+        <button class="btn btn-outline btn-sm rem-freq-btn active" data-times='["08:00"]'            onclick="setFreq(this)">1×  Morning</button>
+        <button class="btn btn-outline btn-sm rem-freq-btn"        data-times='["08:00","20:00"]'    onclick="setFreq(this)">2×  Morn & Eve</button>
+        <button class="btn btn-outline btn-sm rem-freq-btn"        data-times='["08:00","14:00","20:00"]' onclick="setFreq(this)">3×  Daily</button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">For how many days? <span id="reminderDaysVal" style="color:var(--primary);font-weight:700">7</span></label>
+      <input type="range" class="severity-slider" id="reminderDays" min="1" max="30" value="7"
+        oninput="document.getElementById('reminderDaysVal').textContent=this.value" />
+      <div class="severity-labels"><span>1 day</span><span>15 days</span><span>30 days</span></div>
+    </div>
+
+    <div style="background:var(--primary-pale);border-radius:var(--radius-sm);padding:12px 14px;font-size:.85rem;margin-bottom:20px">
+      <i class="fas fa-info-circle" style="color:var(--primary);margin-right:6px"></i>
+      Reminders are sent as <strong>browser notifications</strong>. Keep your browser open for best results.
+    </div>
+
+    <button class="btn btn-primary btn-full" onclick="confirmReminder()">
+      <i class="fas fa-bell"></i> Set Reminder
+    </button>
+  </div>
+</div>
+
+<!-- Feedback Modal -->
+<div class="modal-overlay" id="feedbackModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeFeedback()"><i class="fas fa-times"></i></button>
+    <h3 id="feedbackTitle">Rate this remedy</h3>
+    <p style="color:var(--text-med);margin-top:6px" id="feedbackRemedyName"></p>
+    <div class="star-rating" id="starRating">
+      <span class="star-btn" onclick="setStars(1)">★</span>
+      <span class="star-btn" onclick="setStars(2)">★</span>
+      <span class="star-btn" onclick="setStars(3)">★</span>
+      <span class="star-btn" onclick="setStars(4)">★</span>
+      <span class="star-btn" onclick="setStars(5)">★</span>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Your Experience <span style="color:var(--text-light)">(optional)</span></label>
+      <textarea class="form-control" id="feedbackText" rows="3" placeholder="Did it help? Any observations?"></textarea>
+    </div>
+    <button class="btn btn-primary btn-full" onclick="submitFeedback()"><i class="fas fa-paper-plane"></i> Submit Feedback</button>
+  </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/translations.js"></script>
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script src="js/recommender.js"></script>
+<script src="js/reminders.js"></script>
+<script>
+// ── State ────────────────────────────────────────────────────
+let currentStep       = 1;
+let selectedSymptoms  = [];
+let selectedConditions= [];
+let currentCategory   = 'all';
+let feedbackRemedyId  = '';
+let feedbackRemedyName_str = '';
+let selectedStars     = 0;
+let pageUser          = null;
+let currentResults    = [];   // stores remedy results for reminder access
+let reminderIndex     = -1;   // which remedy card the reminder modal is for
+let reminderTimes     = ['08:00']; // default: once a day
+
+// ── Auth guard + pre-fill ────────────────────────────────────
+Auth.onAuthStateChanged(async (fbUser) => {
+  if (!fbUser) { window.location.href = 'login.html'; return; }
+  document.body.classList.add('ready');
+  pageUser = await Auth.getUserProfile(fbUser.uid);
+  if (!pageUser) {
+    await new Promise(r => setTimeout(r, 2000));
+    pageUser = await Auth.getUserProfile(fbUser.uid);
+  }
+  if (pageUser) {
+    document.getElementById('s1Name').value = pageUser.name || '';
+    document.getElementById('s1Age').value  = pageUser.age  || '';
+    if (pageUser.gender) document.getElementById('s1Gender').value = pageUser.gender;
+    selectedConditions = pageUser.conditions || [];
+    buildConditions();
+  }
+});
+
+// ── Pre-fill from quick start ────────────────────────────────
+const quickSymptoms = sessionStorage.getItem('vo_quick_symptoms');
+if (quickSymptoms) {
+  selectedSymptoms = JSON.parse(quickSymptoms);
+  sessionStorage.removeItem('vo_quick_symptoms');
+}
+
+// ── Build Conditions Grid ────────────────────────────────────
+function buildConditions() {
+  const grid = document.getElementById('conditionsGrid');
+  grid.innerHTML = PREEXISTING_CONDITIONS.map(c => `
+    <label class="condition-checkbox ${selectedConditions.includes(c.id) ? 'checked' : ''}" id="cond_${c.id}">
+      <input type="checkbox" value="${c.id}" ${selectedConditions.includes(c.id) ? 'checked' : ''} onchange="toggleCondition('${c.id}',this)" />
+      <span class="check-box"></span>
+      <span>${c.icon} ${c.label}</span>
+    </label>`).join('');
+}
+buildConditions();
+
+function toggleCondition(id, el) {
+  const label = el.closest('.condition-checkbox');
+  if (id === 'none') {
+    selectedConditions = el.checked ? ['none'] : [];
+    document.querySelectorAll('.condition-checkbox input').forEach(i => {
+      if (i.value !== 'none') { i.checked = false; i.closest('.condition-checkbox').classList.remove('checked'); }
+    });
+  } else {
+    const noneEl = document.querySelector('.condition-checkbox input[value="none"]');
+    if (noneEl) { noneEl.checked = false; noneEl.closest('.condition-checkbox').classList.remove('checked'); }
+    selectedConditions = selectedConditions.filter(c => c !== 'none');
+    if (el.checked) { selectedConditions.push(id); label.classList.add('checked'); }
+    else { selectedConditions = selectedConditions.filter(c => c !== id); label.classList.remove('checked'); }
+  }
+  if (el.checked) label.classList.add('checked'); else label.classList.remove('checked');
+}
+
+// ── Build Symptom Categories ─────────────────────────────────
+const CATS = [
+  { id:'all',         label:'All' },
+  { id:'respiratory', label:'🫁 Respiratory' },
+  { id:'fever',       label:'🌡️ Fever' },
+  { id:'head',        label:'🤕 Head' },
+  { id:'digestive',   label:'🫃 Digestive' },
+  { id:'skin',        label:'✨ Skin' },
+  { id:'joints',      label:'🦴 Joints' },
+  { id:'mental',      label:'🧠 Mental' },
+  { id:'hair',        label:'💇 Hair' },
+  { id:'oral',        label:'🦷 Oral' },
+  { id:'other',       label:'🩺 Other' },
+];
+
+const catFilters = document.getElementById('categoryFilters');
+CATS.forEach(c => {
+  const btn = document.createElement('button');
+  btn.className = 'cat-filter' + (c.id === 'all' ? ' active' : '');
+  btn.textContent = c.label;
+  btn.onclick = () => {
+    currentCategory = c.id;
+    catFilters.querySelectorAll('.cat-filter').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderSymptoms('');
+    document.getElementById('symptomSearch').value = '';
+  };
+  catFilters.appendChild(btn);
+});
+
+function renderSymptoms(query) {
+  const grid = document.getElementById('symptomsGrid');
+  const entries = Object.values(SYMPTOMS_DB).filter(s => {
+    const matchCat = currentCategory === 'all' || s.category === currentCategory;
+    const matchQ   = !query || s.label.toLowerCase().includes(query.toLowerCase());
+    return matchCat && matchQ;
+  });
+  grid.innerHTML = entries.map(s => `
+    <div class="symptom-chip ${selectedSymptoms.includes(s.id) ? 'selected' : ''}"
+      id="chip_${s.id}" onclick="toggleSymptom('${s.id}')">
+      <span class="chip-icon">${s.icon}</span>
+      <span>${s.label}</span>
+    </div>`).join('');
+  updateSelectedBar();
+}
+renderSymptoms('');
+
+function filterSymptoms(q) { renderSymptoms(q); }
+
+function toggleSymptom(id) {
+  const idx = selectedSymptoms.indexOf(id);
+  if (idx === -1) selectedSymptoms.push(id);
+  else selectedSymptoms.splice(idx, 1);
+  renderSymptoms(document.getElementById('symptomSearch').value);
+}
+
+function updateSelectedBar() {
+  const bar = document.getElementById('selectedChips');
+  if (!selectedSymptoms.length) {
+    bar.innerHTML = '<span style="font-size:.85rem;color:var(--text-light)">None selected yet — click symptoms above</span>';
+    return;
+  }
+  bar.innerHTML = selectedSymptoms.map(id => {
+    const s = SYMPTOMS_DB[id];
+    if (!s) return '';
+    return `<span class="selected-chip">${s.icon} ${s.label}
+      <span class="remove" onclick="toggleSymptom('${id}')">✕</span></span>`;
+  }).join('');
+}
+
+// ── Step Navigation ──────────────────────────────────────────
+function goStep(n) {
+  if (n === 2 && !validateStep1()) return;
+  if (n === 4 && !validateStep3()) return;
+
+  document.getElementById(`step${currentStep}`).classList.remove('active');
+  document.getElementById(`dot${currentStep}`).classList.remove('active');
+  document.getElementById(`dot${currentStep}`).classList.add('done');
+
+  currentStep = n;
+  document.getElementById(`step${n}`)?.classList.add('active');
+  document.getElementById(`dot${n}`)?.classList.remove('done');
+  document.getElementById(`dot${n}`)?.classList.add('active');
+  window.scrollTo({ top: 200, behavior: 'smooth' });
+}
+
+function validateStep1() {
+  const age = document.getElementById('s1Age').value;
+  const err = document.getElementById('s1Error');
+  if (!age || isNaN(age) || age < 1 || age > 120) {
+    err.textContent = 'Please enter a valid age (1–120).';
+    err.style.display = 'block';
+    return false;
+  }
+  err.style.display = 'none';
+  return true;
+}
+function validateStep3() {
+  const err = document.getElementById('s3Error');
+  if (!selectedSymptoms.length) {
+    err.textContent = 'Please select at least one symptom.';
+    err.style.display = 'block';
+    return false;
+  }
+  err.style.display = 'none';
+  return true;
+}
+
+// ── Run Analysis ─────────────────────────────────────────────
+function runAnalysis() {
+  document.getElementById('step4').classList.remove('active');
+  document.getElementById('dot4').classList.remove('active');
+  document.getElementById('dot4').classList.add('done');
+  document.getElementById('analyzingScreen').classList.add('active');
+
+  const msgs = ['Checking symptom patterns…','Matching Ayurvedic database…','Filtering by age & conditions…','Ranking remedies by effectiveness…','Preparing your personalized results…'];
+  let i = 0;
+  const msgEl    = document.getElementById('analyzeMsg');
+  const interval = setInterval(() => { if (i < msgs.length) { msgEl.textContent = msgs[i++]; } }, 500);
+
+  setTimeout(() => {
+    clearInterval(interval);
+    document.getElementById('analyzingScreen').classList.remove('active');
+    showResults();
+  }, 2800);
+}
+
+async function showResults() {
+  const age      = parseInt(document.getElementById('s1Age').value) || 25;
+  const gender   = document.getElementById('s1Gender').value;
+  const days     = parseInt(document.getElementById('s4Days').value);
+  const severity = parseInt(document.getElementById('s4Severity').value);
+  const notes    = document.getElementById('s4Notes').value;
+  const name     = document.getElementById('s1Name').value || (pageUser?.name || 'User');
+
+  const output = Recommender.recommend({ selectedSymptoms, age, gender, conditions: selectedConditions, days });
+
+  // Danger alerts
+  const dangerEl = document.getElementById('dangerAlerts');
+  dangerEl.innerHTML = '';
+  output.dangers.forEach(d => {
+    const div = document.createElement('div');
+    div.className = `danger-alert ${d.urgency === 'EMERGENCY' ? '' : 'warning'}`;
+    div.innerHTML = `<div class="alert-icon">${d.icon}</div>
+      <div class="alert-text"><h4>${d.urgency === 'EMERGENCY' ? '⚠️ Seek Emergency Care' : '⚠️ Doctor Recommended'}</h4>
+      <p style="color:var(--text-med)">${d.message}</p></div>`;
+    dangerEl.appendChild(div);
+  });
+
+  if (output.emergency) {
+    document.getElementById('resultsCount').textContent = '';
+    document.getElementById('resultsSubtitle').textContent = 'Please seek immediate medical attention for the symptoms indicated above.';
+    document.getElementById('remedyResults').innerHTML = '<div class="no-results"><i class="fas fa-hospital"></i><p>Based on the symptoms you selected, we strongly recommend seeking professional medical care immediately.<br><br>Herbal remedies are not appropriate for emergency conditions.</p></div>';
+  } else {
+    document.getElementById('resultsCount').textContent = `${output.results.length} remedies found for ${name}`;
+    document.getElementById('resultsSubtitle').textContent = `Based on ${selectedSymptoms.length} symptom(s) · Age ${age} · ${selectedConditions.includes('none') || !selectedConditions.length ? 'No known conditions' : selectedConditions.join(', ')}`;
+
+    if (output.durationWarning) {
+      document.getElementById('durationWarning').innerHTML = `
+        <div class="danger-alert warning" style="margin-bottom:20px">
+          <div class="alert-icon">⏱️</div>
+          <div class="alert-text"><h4>Prolonged Symptoms</h4><p style="color:var(--text-med)">${output.durationWarning}</p></div>
+        </div>`;
+    }
+
+    if (!output.results.length) {
+      document.getElementById('remedyResults').innerHTML = '<div class="no-results"><i class="fas fa-leaf"></i><p>No specific remedies found for this combination. Please try different symptoms or consult a healthcare provider.</p></div>';
+    } else {
+      document.getElementById('remedyResults').innerHTML = output.results.map((item, i) => Recommender.buildRemedyCard(item, i)).join('');
+    }
+
+    // Save to Firestore history
+    if (pageUser && output.results.length) {
+      await Auth.addHistory({
+        date:        new Date().toISOString(),
+        symptoms:    selectedSymptoms.map(id => SYMPTOMS_DB[id]?.label || id),
+        topRemedy:   output.results[0]?.remedy.name || '',
+        remedyCount: output.results.length,
+        age, gender, severity, notes,
+      });
+    }
+  }
+
+  // Store results for reminder modal access
+  currentResults = output.results;
+
+  document.getElementById('step5').classList.add('active');
+  document.getElementById('dot5').classList.remove('done');
+  document.getElementById('dot5').classList.add('active');
+  window.scrollTo({ top: 200, behavior: 'smooth' });
+}
+
+function resetForm() {
+  selectedSymptoms   = [];
+  selectedConditions = pageUser?.conditions || [];
+  currentStep = 1;
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.step-dot').forEach((d, i) => {
+    d.classList.remove('active','done');
+    if (i === 0) d.classList.add('active');
+  });
+  document.getElementById('step1').classList.add('active');
+  document.getElementById('dangerAlerts').innerHTML   = '';
+  document.getElementById('remedyResults').innerHTML  = '';
+  document.getElementById('durationWarning').innerHTML= '';
+  if (pageUser) {
+    document.getElementById('s1Name').value = pageUser.name;
+    document.getElementById('s1Age').value  = pageUser.age;
+  }
+  buildConditions();
+  renderSymptoms('');
+  window.scrollTo({ top: 200, behavior: 'smooth' });
+}
+
+// ── Feedback ─────────────────────────────────────────────────
+function openFeedback(id, name) {
+  feedbackRemedyId       = id;
+  feedbackRemedyName_str = name;
+  selectedStars = 0;
+  document.getElementById('feedbackRemedyName').textContent = name;
+  document.getElementById('feedbackText').value = '';
+  document.querySelectorAll('.star-btn').forEach(s => s.classList.remove('active'));
+  document.getElementById('feedbackModal').classList.add('active');
+}
+function closeFeedback() { document.getElementById('feedbackModal').classList.remove('active'); }
+function setStars(n) {
+  selectedStars = n;
+  document.querySelectorAll('.star-btn').forEach((s, i) => s.classList.toggle('active', i < n));
+}
+async function submitFeedback() {
+  if (!selectedStars) { showToast('Please select a star rating', 'warning'); return; }
+  const entry = {
+    remedyId:   feedbackRemedyId,
+    remedyName: feedbackRemedyName_str,
+    stars:      selectedStars,
+    text:       document.getElementById('feedbackText').value,
+    date:       new Date().toISOString(),
+  };
+  if (pageUser) await Auth.addFeedback(entry);
+  closeFeedback();
+  showToast('Thank you for your feedback! 🌿', 'success');
+}
+
+document.getElementById('feedbackModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeFeedback(); });
+
+// ── Reminder ─────────────────────────────────────────────────
+function openReminder(index) {
+  if (!pageUser) { showToast('Sign in to set reminders.', 'warning'); return; }
+  reminderIndex = index;
+  const r = currentResults[index]?.remedy;
+  if (!r) return;
+
+  document.getElementById('reminderRemedyName').textContent = r.name;
+  const days = Reminders.parseDays(r.duration);
+  document.getElementById('reminderDays').value = days;
+  document.getElementById('reminderDaysVal').textContent = days;
+
+  // Reset frequency buttons
+  reminderTimes = ['08:00'];
+  document.querySelectorAll('.rem-freq-btn').forEach((btn, i) => btn.classList.toggle('active', i === 0));
+
+  document.getElementById('reminderModal').classList.add('active');
+}
+
+function closeReminder() { document.getElementById('reminderModal').classList.remove('active'); }
+
+function setFreq(btn) {
+  document.querySelectorAll('.rem-freq-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  reminderTimes = JSON.parse(btn.dataset.times);
+}
+
+async function confirmReminder() {
+  const granted = await Reminders.requestPermission();
+  if (!granted) return;
+
+  const r     = currentResults[reminderIndex]?.remedy;
+  const days  = parseInt(document.getElementById('reminderDays').value);
+  const today = Reminders.todayStr();
+
+  const reminder = {
+    id:         Reminders.makeId(),
+    remedyId:   r.id,
+    remedyName: r.name,
+    dosage:     r.dosage,
+    times:      reminderTimes,
+    timesPerDay:reminderTimes.length,
+    startDate:  today,
+    endDate:    Reminders.endDate(today, days),
+    daysTotal:  days,
+    active:     true,
+    createdAt:  new Date().toISOString(),
+  };
+
+  await Reminders.save(pageUser.id, reminder);
+  Reminders.scheduleToday([reminder]);
+  closeReminder();
+  showToast(`Reminder set for ${r.name}! You'll be notified ${reminderTimes.length}× daily for ${days} days.`, 'success', 4000);
+}
+
+document.getElementById('reminderModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeReminder(); });
+</script>
+</body>
+</html>

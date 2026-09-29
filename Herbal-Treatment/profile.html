@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile — VanaOshadhi</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    body { visibility: hidden; }
+    body.ready { visibility: visible; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><div class="logo-icon">🌿</div>VanaOshadhi</a>
+    <div class="nav-links">
+      <a href="index.html"       class="nav-link">Home</a>
+      <a href="recommender.html" class="nav-link">Get Remedy</a>
+      <a href="herbs.html"       class="nav-link">Herb Library</a>
+      <a href="dashboard.html"   class="nav-link">Dashboard</a>
+      <a href="profile.html"     class="nav-link active">Profile</a>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+      <div class="nav-avatar" id="navAvatar">U</div>
+      <button class="icon-btn" id="logoutBtn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" class="nav-link">Home</a>
+  <a href="recommender.html" class="nav-link">Get Remedy</a>
+  <a href="dashboard.html" class="nav-link">Dashboard</a>
+  <a href="#" class="nav-link" id="mobileLogout">Logout</a>
+</div>
+
+<div class="page-body">
+<div class="section">
+<div class="container" style="max-width:860px">
+
+  <!-- Profile Header -->
+  <div class="profile-header">
+    <div class="profile-avatar-big" id="profileAvatar">U</div>
+    <h2 class="profile-name"  id="profileName">User</h2>
+    <p class="profile-email"  id="profileEmail">user@email.com</p>
+    <p style="color:rgba(255,255,255,.65);font-size:.85rem;margin-top:6px" id="profileMeta"></p>
+  </div>
+
+  <!-- Tabs -->
+  <div style="display:flex;gap:4px;margin-bottom:24px;border-bottom:2px solid var(--border)">
+    <button class="tab-btn active" id="tabInfo"     onclick="switchProfileTab('info')">    <i class="fas fa-user"></i> Info</button>
+    <button class="tab-btn"        id="tabHistory"  onclick="switchProfileTab('history')"> <i class="fas fa-history"></i> History</button>
+    <button class="tab-btn"        id="tabFeedback" onclick="switchProfileTab('feedback')"><i class="fas fa-star"></i> Feedback</button>
+    <button class="tab-btn"        id="tabEdit"     onclick="switchProfileTab('edit')">    <i class="fas fa-edit"></i> Edit Profile</button>
+  </div>
+
+  <!-- INFO TAB -->
+  <div id="panelInfo">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px" id="infoGrid"></div>
+    <div class="card mt-16">
+      <h4 style="margin-bottom:14px"><i class="fas fa-notes-medical" style="color:var(--primary);margin-right:8px"></i>Pre-existing Conditions</h4>
+      <div id="conditionTags"><span class="condition-tag">None recorded</span></div>
+    </div>
+    <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
+      <a href="recommender.html" class="btn btn-primary"><i class="fas fa-search"></i> Find a Remedy</a>
+      <button class="btn btn-outline" style="color:var(--danger);border-color:var(--danger)" onclick="confirmClearHistory()">
+        <i class="fas fa-trash"></i> Clear History
+      </button>
+    </div>
+  </div>
+
+  <!-- HISTORY TAB -->
+  <div id="panelHistory" style="display:none">
+    <div id="historyFull" class="history-list">
+      <div class="no-results"><i class="fas fa-leaf"></i><p>No remedy searches yet.</p></div>
+    </div>
+  </div>
+
+  <!-- FEEDBACK TAB -->
+  <div id="panelFeedback" style="display:none">
+    <div id="feedbackList">
+      <div class="no-results"><i class="fas fa-star"></i><p>No feedback given yet.<br>Rate remedies you've tried!</p></div>
+    </div>
+  </div>
+
+  <!-- EDIT TAB -->
+  <div id="panelEdit" style="display:none">
+    <div class="card">
+      <h3 style="margin-bottom:20px">Edit Profile</h3>
+      <form onsubmit="saveProfile(event)">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input class="form-control" id="editName" type="text" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Age</label>
+            <input class="form-control" id="editAge" type="number" min="1" max="120" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Gender</label>
+          <select class="form-control" id="editGender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other / Prefer not to say</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Pre-existing Conditions</label>
+          <div class="conditions-grid" id="editConditions"></div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
+          <button type="submit" class="btn btn-primary" id="saveProfileBtn"><i class="fas fa-save"></i> Save Changes</button>
+          <button type="button" class="btn btn-ghost" onclick="switchProfileTab('info')">Cancel</button>
+        </div>
+      </form>
+    </div>
+    <div class="card mt-16" style="border-color:var(--danger)">
+      <h4 style="color:var(--danger);margin-bottom:10px"><i class="fas fa-exclamation-triangle"></i> Danger Zone</h4>
+      <p style="font-size:.88rem;margin-bottom:14px">Permanently delete your account and all associated data. This cannot be undone.</p>
+      <button class="btn btn-sm" style="background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger)" onclick="deleteAccount()">
+        <i class="fas fa-trash"></i> Delete My Account
+      </button>
+    </div>
+  </div>
+
+</div>
+</div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/translations.js"></script>
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+  let pageUser = null;
+  let editConditions = [];
+
+  Auth.onAuthStateChanged(async (fbUser) => {
+    if (!fbUser) { window.location.href = 'login.html'; return; }
+    document.body.classList.add('ready');
+    pageUser = await Auth.getUserProfile(fbUser.uid);
+    if (!pageUser) {
+      await new Promise(r => setTimeout(r, 2000));
+      pageUser = await Auth.getUserProfile(fbUser.uid);
+    }
+    if (!pageUser) { Auth.logout(); return; }
+    load();
+  });
+
+  function load() {
+    if (!pageUser) return;
+
+    document.getElementById('profileAvatar').textContent = pageUser.name.charAt(0).toUpperCase();
+    document.getElementById('profileName').textContent   = pageUser.name;
+    document.getElementById('profileEmail').textContent  = pageUser.email;
+    document.getElementById('profileMeta').textContent   = `Age ${pageUser.age} · ${capitalize(pageUser.gender || 'User')} · Joined ${formatDate(pageUser.joinedAt)}`;
+
+    const stats = [
+      { icon:'fas fa-history',   label:'Remedy Searches', val:(pageUser.history  || []).length, color:'green'  },
+      { icon:'fas fa-star',      label:'Feedbacks Given',  val:(pageUser.feedback || []).length, color:'amber'  },
+      { icon:'fas fa-user',      label:'Member Since',     val:new Date(pageUser.joinedAt).getFullYear(), color:'blue' },
+      { icon:'fas fa-shield-alt',label:'Health Profile',   val:!(pageUser.conditions||[]).filter(c=>c!=='none').length ? 'No conditions' : `${(pageUser.conditions||[]).filter(c=>c!=='none').length} condition(s)`, color:'purple' },
+    ];
+    document.getElementById('infoGrid').innerHTML = stats.map(s => `
+      <div class="stat-card">
+        <div class="stat-card-icon ${s.color}"><i class="${s.icon}" style="color:var(--primary)"></i></div>
+        <div class="stat-card-info"><h3>${s.val}</h3><p>${s.label}</p></div>
+      </div>`).join('');
+
+    const conds = (pageUser.conditions || []).filter(c => c !== 'none');
+    document.getElementById('conditionTags').innerHTML = conds.length
+      ? conds.map(c => { const found = PREEXISTING_CONDITIONS.find(p => p.id === c); return `<span class="condition-tag">${found?.icon || '⚕️'} ${found?.label || c}</span>`; }).join('')
+      : '<span class="condition-tag">✅ None</span>';
+
+    const hist = pageUser.history || [];
+    if (hist.length) {
+      document.getElementById('historyFull').innerHTML = hist.map(h => `
+        <div class="history-item">
+          <div class="history-icon">🌿</div>
+          <div class="history-info">
+            <div class="history-name">${h.topRemedy || 'Herbal Remedy'}</div>
+            <div class="history-date">${formatDate(h.date)} · Severity ${h.severity || '-'}/10</div>
+            <div class="history-symptoms">${(h.symptoms || []).join(', ')}</div>
+          </div>
+          <span class="badge badge-green">${h.remedyCount || 1} remedies</span>
+        </div>`).join('');
+    }
+
+    const fb = pageUser.feedback || [];
+    if (fb.length) {
+      document.getElementById('feedbackList').innerHTML = fb.map(f => `
+        <div class="card card-sm mb-16">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start">
+            <h4 style="font-size:.95rem">${f.remedyName}</h4>
+            <span style="color:var(--accent);font-size:1.1rem">${'★'.repeat(f.stars)}${'☆'.repeat(5 - f.stars)}</span>
+          </div>
+          ${f.text ? `<p style="margin-top:8px;font-size:.88rem;color:var(--text-med)">"${f.text}"</p>` : ''}
+          <div style="font-size:.78rem;color:var(--text-light);margin-top:8px">${formatDate(f.date)}</div>
+        </div>`).join('');
+    }
+
+    document.getElementById('editName').value   = pageUser.name;
+    document.getElementById('editAge').value    = pageUser.age;
+    document.getElementById('editGender').value = pageUser.gender || 'other';
+    editConditions = [...(pageUser.conditions || [])];
+    buildEditConditions();
+  }
+
+  function buildEditConditions() {
+    document.getElementById('editConditions').innerHTML = PREEXISTING_CONDITIONS.map(c => `
+      <label class="condition-checkbox ${editConditions.includes(c.id) ? 'checked' : ''}" id="ec_${c.id}">
+        <input type="checkbox" value="${c.id}" ${editConditions.includes(c.id) ? 'checked' : ''} onchange="toggleEditCond('${c.id}',this)" />
+        <span class="check-box"></span>
+        <span>${c.icon} ${c.label}</span>
+      </label>`).join('');
+  }
+
+  function toggleEditCond(id, el) {
+    const label = el.closest('.condition-checkbox');
+    if (el.checked) { editConditions.push(id); label.classList.add('checked'); }
+    else { editConditions = editConditions.filter(c => c !== id); label.classList.remove('checked'); }
+  }
+
+  async function saveProfile(e) {
+    e.preventDefault();
+    const btn = document.getElementById('saveProfileBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving…';
+
+    await Auth.updateUser({
+      name:       document.getElementById('editName').value.trim(),
+      age:        parseInt(document.getElementById('editAge').value),
+      gender:     document.getElementById('editGender').value,
+      conditions: editConditions,
+    });
+
+    // Reload fresh from Firestore
+    const fbUser = Auth.getCurrentFirebaseUser();
+    pageUser = await Auth.getUserProfile(fbUser.uid);
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-save"></i> Save Changes';
+    showToast('Profile updated successfully! 🌿', 'success');
+    load();
+    switchProfileTab('info');
+  }
+
+  function switchProfileTab(tab) {
+    ['info','history','feedback','edit'].forEach(t => {
+      document.getElementById(`tab${capitalize(t)}`).classList.toggle('active', t === tab);
+      document.getElementById(`panel${capitalize(t)}`).style.display = t === tab ? 'block' : 'none';
+    });
+  }
+
+  async function confirmClearHistory() {
+    if (!confirm('Clear all your remedy history? This cannot be undone.')) return;
+    await Auth.updateUser({ history: [] });
+    const fbUser = Auth.getCurrentFirebaseUser();
+    pageUser = await Auth.getUserProfile(fbUser.uid);
+    showToast('History cleared.', 'info');
+    load();
+  }
+
+  async function deleteAccount() {
+    if (!confirm('Delete your entire account? This is permanent and cannot be undone.')) return;
+    const res = await Auth.deleteCurrentUser();
+    if (!res.ok) {
+      showToast(res.msg, 'error');
+    }
+  }
+
+  document.getElementById('mobileLogout')?.addEventListener('click', () => Auth.logout());
+</script>
+</body>
+</html>

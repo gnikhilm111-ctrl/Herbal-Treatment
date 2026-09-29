@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VanaOshadhi — Nature's Wisdom, One Remedy at a Time</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+<!-- ── Navbar ─────────────────────────────────────────────── -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="logo-icon">🌿</div>
+      VanaOshadhi
+    </a>
+    <div class="nav-links">
+      <a href="index.html"       class="nav-link" data-i18n="nav_home">Home</a>
+      <a href="recommender.html" class="nav-link" data-i18n="nav_recommender">Get Remedy</a>
+      <a href="herbs.html"       class="nav-link" data-i18n="nav_herbs">Herb Library</a>
+      <a href="dashboard.html"   class="nav-link" data-i18n="nav_dashboard">Dashboard</a>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeToggle" title="Toggle theme"><i class="fas fa-moon"></i></button>
+      <a href="login.html" class="btn btn-primary btn-sm" id="navSignIn">Sign In</a>
+      <div class="nav-avatar" id="navAvatar" onclick="window.location='profile.html'" style="display:none;cursor:pointer">U</div>
+      <button class="icon-btn" id="logoutBtn" title="Logout" style="display:none"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html"       class="nav-link">Home</a>
+  <a href="recommender.html" class="nav-link">Get Remedy</a>
+  <a href="herbs.html"       class="nav-link">Herb Library</a>
+  <a href="login.html"       class="nav-link">Sign In</a>
+</div>
+
+<!-- ── Hero ───────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <div class="hero-label"><i class="fas fa-leaf"></i> Rooted in Ayurveda &amp; Traditional Medicine</div>
+      <h1>Nature's Wisdom,<br>One Remedy at a Time.</h1>
+      <p>Tell us your symptoms — we'll find the perfect herbal remedy tailored to your age, health background, and condition. No side effects, just nature's best.</p>
+      <div class="hero-btns">
+        <a href="recommender.html" class="btn btn-accent btn-lg"><i class="fas fa-search"></i> Get My Remedy</a>
+        <a href="herbs.html"       class="btn btn-lg" style="background:rgba(255,255,255,.15);color:#fff;border:1.5px solid rgba(255,255,255,.35)"><i class="fas fa-book-open"></i> Explore Herbs</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="stat-num">35+</div><div class="stat-label">Remedies</div></div>
+        <div class="stat-item"><div class="stat-num">60+</div><div class="stat-label">Symptoms</div></div>
+        <div class="stat-item"><div class="stat-num">30+</div><div class="stat-label">Herbs</div></div>
+        <div class="stat-item"><div class="stat-num">100%</div><div class="stat-label">Natural</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-card-float">
+        <span class="hero-herb-emoji">🌿</span>
+        <h3>Personalized Remedies</h3>
+        <p>Based on your symptoms, age, and health history — just for you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── How It Works ───────────────────────────────────────── -->
+<section class="section" style="background:var(--surface);">
+  <div class="container">
+    <div class="section-title">
+      <h2>How VanaOshadhi Works</h2>
+      <p>Three simple steps to find your perfect herbal remedy</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📋</div>
+        <h3>1. Share Your Symptoms</h3>
+        <p>Tell us your age, any existing health conditions, your symptoms, and how long you've had them using our guided form.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔬</div>
+        <h3>2. We Analyze & Match</h3>
+        <p>Our Ayurvedic-knowledge engine matches your symptoms to the most relevant herbal remedies, checking safety for your profile.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌿</div>
+        <h3>3. Get Tailored Remedies</h3>
+        <p>Receive detailed remedy cards with ingredients, step-by-step preparation, dosage, benefits, and safety precautions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Features ───────────────────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <h2>Everything You Need</h2>
+      <p>A complete herbal wellness companion, right in your browser</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">⚠️</div>
+        <h3>Safety First</h3>
+        <p>Automatic danger detection alerts you when symptoms suggest a visit to the doctor — your safety is our priority.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📖</div>
+        <h3>Herb Encyclopedia</h3>
+        <p>Explore 30+ medicinal herbs with scientific names, Hindi names, benefits, precautions, and traditional uses.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌙</div>
+        <h3>Dark Mode</h3>
+        <p>Comfortable reading day or night with our elegant light and dark themes, saved to your preferences.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌐</div>
+        <h3>Hindi / English</h3>
+        <p>Toggle between English and Hindi — symptom names, herb names, and UI text all switch seamlessly.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🖨️</div>
+        <h3>Print &amp; Save</h3>
+        <p>Print any remedy card or save it as a PDF to keep offline. Share with family members easily.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Personal History</h3>
+        <p>Create a free account to track your remedy history, save favorites, and monitor your wellness journey.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Popular Herbs Teaser ────────────────────────────────── -->
+<section class="section" style="background:var(--surface);">
+  <div class="container">
+    <div class="section-title">
+      <h2>Spotlight Herbs</h2>
+      <p>A glimpse at nature's most powerful healers</p>
+    </div>
+    <div id="spotlightHerbs" class="herbs-grid"></div>
+    <div class="text-center mt-24">
+      <a href="herbs.html" class="btn btn-primary btn-lg"><i class="fas fa-book-open"></i> View Full Herb Library</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Disclaimer ──────────────────────────────────────────── -->
+<section class="section-sm" style="background:var(--warning-bg);">
+  <div class="container">
+    <div class="disclaimer-box" style="max-width:780px;margin:0 auto;background:transparent;border:none;">
+      <i class="fas fa-exclamation-triangle fa-lg"></i>
+      <div>
+        <strong>Medical Disclaimer:</strong> VanaOshadhi is an educational tool based on traditional Ayurvedic and herbal medicine knowledge. The information provided is not a substitute for professional medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider for serious, persistent, or worsening symptoms. If you experience an emergency, call 112 or visit the nearest hospital immediately.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ──────────────────────────────────────────────── -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo-text">🌿 VanaOshadhi</div>
+      <p>Nature's wisdom, one remedy at a time. Rooted in Ayurveda and traditional herbal medicine to support your wellness naturally.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="recommender.html">Get a Remedy</a></li>
+        <li><a href="herbs.html">Herb Library</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Account</h4>
+      <ul>
+        <li><a href="login.html">Sign In</a></li>
+        <li><a href="login.html#register">Register</a></li>
+        <li><a href="profile.html">Profile</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>About</h4>
+      <ul>
+        <li><a href="#">About Project</a></li>
+        <li><a href="#">Disclaimer</a></li>
+        <li><a href="#">References</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 VanaOshadhi · Built with 🌿 for a Real-Time Research Project · For educational purposes only</p>
+  </div>
+</footer>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/translations.js"></script>
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+  // Render spotlight herbs
+  const spotlightIds = ['ginger','turmeric','tulsi','ashwagandha','neem','aloe_vera'];
+  const container = document.getElementById('spotlightHerbs');
+  spotlightIds.forEach(id => {
+    const h = HERBS_DB[id];
+    if (!h) return;
+    const card = document.createElement('div');
+    card.className = 'herb-card';
+    card.onclick = () => window.location.href = `herbs.html?herb=${h.id}`;
+    card.innerHTML = `
+      <div class="herb-card-banner" style="background:linear-gradient(135deg,${h.color}22,${h.color}44)">
+        <span style="font-size:3.5rem">${h.emoji}</span>
+      </div>
+      <div class="herb-card-body">
+        <div class="herb-card-name">${h.name}</div>
+        <div class="herb-card-sci">${h.sci}</div>
+        <div class="herb-card-hindi">${h.hindi}</div>
+        <p class="herb-card-desc">${h.desc}</p>
+        <div class="herb-tags">${h.uses.slice(0,3).map(u=>`<span class="herb-tag">${u}</span>`).join('')}</div>
+      </div>`;
+    container.appendChild(card);
+  });
+</script>
+</body>
+</html>

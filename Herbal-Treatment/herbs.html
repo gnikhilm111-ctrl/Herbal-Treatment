@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Herb Library — VanaOshadhi</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo"><div class="logo-icon">🌿</div>VanaOshadhi</a>
+    <div class="nav-links">
+      <a href="index.html"       class="nav-link">Home</a>
+      <a href="recommender.html" class="nav-link">Get Remedy</a>
+      <a href="herbs.html"       class="nav-link active">Herb Library</a>
+      <a href="dashboard.html"   class="nav-link">Dashboard</a>
+      <a href="profile.html"     class="nav-link">Profile</a>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn" id="themeToggle"><i class="fas fa-moon"></i></button>
+      <div class="nav-avatar" id="navAvatar" onclick="window.location='profile.html'">U</div>
+      <button class="icon-btn" id="logoutBtn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+    </div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html" class="nav-link">Home</a>
+  <a href="recommender.html" class="nav-link">Get Remedy</a>
+  <a href="dashboard.html" class="nav-link">Dashboard</a>
+  <a href="profile.html" class="nav-link">Profile</a>
+</div>
+
+<div class="page-body">
+  <div class="page-header">
+    <h1>Herb Library</h1>
+    <p>Explore nature's most powerful healers — scientific names, properties, benefits, and traditional uses.</p>
+  </div>
+
+  <div class="section">
+    <div class="container">
+
+      <!-- Search -->
+      <div class="search-bar-big">
+        <i class="fas fa-search"></i>
+        <input class="form-control" id="herbSearch" type="text"
+          placeholder="Search by herb name, Hindi name, or condition…"
+          oninput="renderHerbs(this.value)" />
+      </div>
+
+      <!-- Category filters -->
+      <div class="symptom-categories" id="herbCats" style="justify-content:center;margin-bottom:28px"></div>
+
+      <!-- Stats strip -->
+      <div style="text-align:center;margin-bottom:32px;color:var(--text-light);font-size:.9rem">
+        Showing <strong id="herbCount" style="color:var(--primary)">0</strong> herbs
+      </div>
+
+      <!-- Grid -->
+      <div class="herbs-grid" id="herbsGrid"></div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Herb Detail Modal -->
+<div class="modal-overlay" id="herbModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeHerbModal()"><i class="fas fa-times"></i></button>
+    <div id="herbModalContent"></div>
+  </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/translations.js"></script>
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+  const herbCatOptions = [
+    { id:'all', label:'All Herbs' },
+    { id:'Root', label:'Roots' },
+    { id:'Herb', label:'Herbs & Leaves' },
+    { id:'Fruit', label:'Fruits' },
+    { id:'Flower', label:'Flowers' },
+    { id:'Seed', label:'Seeds' },
+    { id:'Tree', label:'Trees' },
+    { id:'Natural', label:'Natural' },
+    { id:'Blend', label:'Blends' },
+  ];
+
+  let activeHerbCat = 'all';
+  const catBar = document.getElementById('herbCats');
+  herbCatOptions.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'cat-filter' + (c.id === 'all' ? ' active' : '');
+    btn.textContent = c.label;
+    btn.onclick = () => {
+      activeHerbCat = c.id;
+      catBar.querySelectorAll('.cat-filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderHerbs(document.getElementById('herbSearch').value);
+    };
+    catBar.appendChild(btn);
+  });
+
+  function renderHerbs(query = '') {
+    const herbs = Object.values(HERBS_DB).filter(h => {
+      const matchCat = activeHerbCat === 'all' || h.cat.includes(activeHerbCat);
+      const q = query.toLowerCase();
+      const matchQ   = !q || h.name.toLowerCase().includes(q) ||
+                       h.sci.toLowerCase().includes(q) ||
+                       h.uses.some(u => u.toLowerCase().includes(q)) ||
+                       h.props.some(p => p.toLowerCase().includes(q));
+      return matchCat && matchQ;
+    });
+
+    document.getElementById('herbCount').textContent = herbs.length;
+    const grid = document.getElementById('herbsGrid');
+
+    if (!herbs.length) {
+      grid.innerHTML = '<div class="no-results" style="grid-column:1/-1"><i class="fas fa-leaf"></i><p>No herbs found for your search.<br>Try a different keyword.</p></div>';
+      return;
+    }
+
+    grid.innerHTML = herbs.map(h => `
+      <div class="herb-card" onclick="openHerbModal('${h.id}')">
+        <div class="herb-card-banner" style="background:linear-gradient(135deg,${h.color}22,${h.color}55)">
+          <span style="font-size:3.5rem">${h.emoji}</span>
+          <span style="position:absolute;top:10px;right:12px;font-size:.75rem;background:rgba(0,0,0,.2);color:#fff;padding:3px 8px;border-radius:20px">${h.cat}</span>
+        </div>
+        <div class="herb-card-body">
+          <div class="herb-card-name">${h.name}</div>
+          <div class="herb-card-sci">${h.sci}</div>
+          <div class="herb-card-hindi" style="color:var(--primary)">${h.hindi}</div>
+          <p class="herb-card-desc">${h.desc}</p>
+          <div class="herb-tags">${h.uses.slice(0,4).map(u=>`<span class="herb-tag">${u}</span>`).join('')}</div>
+        </div>
+      </div>`).join('');
+  }
+
+  function openHerbModal(id) {
+    const h = HERBS_DB[id];
+    if (!h) return;
+    const propBadges = h.props.map(p => `<span class="badge badge-green" style="margin:2px">${p}</span>`).join('');
+    const benefitItems = h.benefits.map(b => `<li style="display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px dashed var(--border);font-size:.9rem;color:var(--text-med)"><i class="fas fa-check" style="color:var(--primary);margin-top:3px;flex-shrink:0"></i>${b}</li>`).join('');
+    const precaItems = h.precautions.map(p => `<li style="display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px dashed var(--border);font-size:.9rem;color:var(--text-med)"><i class="fas fa-exclamation-triangle" style="color:var(--warning);margin-top:3px;flex-shrink:0"></i>${p}</li>`).join('');
+    const useTags = h.uses.map(u => `<span class="herb-tag">${u}</span>`).join('');
+
+    document.getElementById('herbModalContent').innerHTML = `
+      <div style="text-align:center;margin-bottom:24px;padding:28px;border-radius:var(--radius-lg);background:linear-gradient(135deg,${h.color}22,${h.color}44)">
+        <div style="font-size:4rem;margin-bottom:12px">${h.emoji}</div>
+        <h2 style="margin-bottom:4px">${h.name}</h2>
+        <div style="font-style:italic;color:var(--text-light);font-size:.9rem;margin-bottom:6px">${h.sci}</div>
+        <div style="color:var(--primary);font-weight:600">${h.hindi}</div>
+        <span class="badge badge-green" style="margin-top:8px">${h.cat}</span>
+      </div>
+
+      <p style="color:var(--text-med);line-height:1.7;margin-bottom:20px">${h.desc}</p>
+
+      <h4 style="margin-bottom:10px">Properties</h4>
+      <div style="margin-bottom:20px">${propBadges}</div>
+
+      <h4 style="margin-bottom:10px">Uses</h4>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px">${useTags}</div>
+
+      <h4 style="margin-bottom:10px">Benefits</h4>
+      <ul style="margin-bottom:20px;padding:0">${benefitItems}</ul>
+
+      <h4 style="margin-bottom:10px">Precautions</h4>
+      <ul style="margin-bottom:20px;padding:0">${precaItems}</ul>
+
+      <div style="background:var(--surface-2);border-radius:var(--radius-sm);padding:12px 16px;font-size:.85rem;color:var(--text-light)">
+        <i class="fas fa-map-marker-alt" style="color:var(--primary);margin-right:6px"></i> <strong>Origin:</strong> ${h.origin || 'Traditional'}
+      </div>
+
+      <div style="margin-top:20px;text-align:center">
+        <a href="recommender.html" class="btn btn-primary"><i class="fas fa-search"></i> Find Remedies Using ${h.name}</a>
+      </div>`;
+
+    document.getElementById('herbModal').classList.add('active');
+  }
+
+  function closeHerbModal() { document.getElementById('herbModal').classList.remove('active'); }
+
+  // Click outside to close
+  document.getElementById('herbModal').addEventListener('click', e => { if (e.target === e.currentTarget) closeHerbModal(); });
+
+  // Check URL param
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('herb')) openHerbModal(params.get('herb'));
+
+  renderHerbs();
+</script>
+</body>
+</html>

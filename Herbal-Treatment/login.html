@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — VanaOshadhi</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" />
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+<div class="auth-page">
+
+  <button class="icon-btn" id="themeToggle" title="Toggle theme"
+    style="position:fixed;top:16px;right:16px;z-index:100;background:rgba(255,255,255,.15);color:#fff;border-color:rgba(255,255,255,.3)">
+    <i class="fas fa-moon"></i>
+  </button>
+
+
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="logo-big">🌿</div>
+      <h2>VanaOshadhi</h2>
+      <p>Nature's wisdom, one remedy at a time</p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="auth-tabs" id="authTabs">
+      <div class="auth-tab active" id="tabLogin"    onclick="switchAuthTab('login')">Sign In</div>
+      <div class="auth-tab"        id="tabRegister" onclick="switchAuthTab('register')">Register</div>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form class="auth-form active" id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label class="form-label"><i class="fas fa-envelope"></i> Email Address</label>
+        <input class="form-control" type="email" id="loginEmail" placeholder="you@example.com" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label"><i class="fas fa-lock"></i> Password</label>
+        <div style="position:relative">
+          <input class="form-control" type="password" id="loginPassword" placeholder="••••••••" required style="padding-right:44px" />
+          <button type="button" onclick="togglePwd('loginPassword',this)"
+            style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--text-light);background:none;border:none;cursor:pointer">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
+      <div id="loginError" class="form-error" style="margin-bottom:12px;display:none"></div>
+      <div style="text-align:right;margin-bottom:16px;margin-top:-4px">
+        <a href="#" onclick="switchAuthTab('forgot')" style="font-size:.83rem;color:var(--primary)">Forgot password?</a>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full btn-lg" id="loginBtn">
+        <i class="fas fa-sign-in-alt"></i> Sign In
+      </button>
+      <div class="auth-divider">or</div>
+      <p style="text-align:center;font-size:.88rem;color:var(--text-light)">
+        Don't have an account?
+        <a href="#" onclick="switchAuthTab('register')" style="color:var(--primary);font-weight:600">Register free</a>
+      </p>
+    </form>
+
+    <!-- REGISTER FORM -->
+    <form class="auth-form" id="registerForm" onsubmit="handleRegister(event)">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Full Name</label>
+          <input class="form-control" type="text" id="regName" placeholder="Aarav Kumar" required />
+        </div>
+        <div class="form-group" style="margin-bottom:0">
+          <label class="form-label">Age</label>
+          <input class="form-control" type="number" id="regAge" placeholder="25" min="1" max="120" required />
+        </div>
+      </div>
+      <div class="form-group mt-16">
+        <label class="form-label">Email Address</label>
+        <input class="form-control" type="email" id="regEmail" placeholder="you@example.com" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Gender</label>
+        <select class="form-control" id="regGender" required>
+          <option value="">Select gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other / Prefer not to say</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div style="position:relative">
+          <input class="form-control" type="password" id="regPassword" placeholder="Min. 6 characters" minlength="6" required style="padding-right:44px" />
+          <button type="button" onclick="togglePwd('regPassword',this)"
+            style="position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--text-light);background:none;border:none;cursor:pointer">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
+      <div id="registerError" class="form-error" style="margin-bottom:12px;display:none"></div>
+      <button type="submit" class="btn btn-primary btn-full btn-lg" id="registerBtn">
+        <i class="fas fa-user-plus"></i> Create Account
+      </button>
+      <p style="text-align:center;font-size:.82rem;color:var(--text-light);margin-top:14px">
+        Already have an account?
+        <a href="#" onclick="switchAuthTab('login')" style="color:var(--primary);font-weight:600">Sign in</a>
+      </p>
+    </form>
+
+    <!-- FORGOT PASSWORD FORM -->
+    <form class="auth-form" id="forgotForm" onsubmit="handleForgot(event)">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:2.5rem;margin-bottom:8px">🔑</div>
+        <h3 style="font-size:1.1rem;margin-bottom:6px">Reset your password</h3>
+        <p style="font-size:.88rem;color:var(--text-light)">Enter your email and we'll send a reset link.</p>
+      </div>
+      <div class="form-group">
+        <label class="form-label"><i class="fas fa-envelope"></i> Email Address</label>
+        <input class="form-control" type="email" id="forgotEmail" placeholder="you@example.com" required />
+      </div>
+      <div id="forgotError"   class="form-error"   style="margin-bottom:12px;display:none"></div>
+      <div id="forgotSuccess" class="form-success" style="margin-bottom:12px;display:none;color:var(--primary);background:var(--primary-pale);padding:10px 14px;border-radius:8px;font-size:.88rem"></div>
+      <button type="submit" class="btn btn-primary btn-full btn-lg" id="forgotBtn">
+        <i class="fas fa-paper-plane"></i> Send Reset Link
+      </button>
+      <p style="text-align:center;font-size:.82rem;color:var(--text-light);margin-top:14px">
+        <a href="#" onclick="switchAuthTab('login')" style="color:var(--primary);font-weight:600">← Back to Sign In</a>
+      </p>
+    </form>
+
+  </div>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/translations.js"></script>
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/app.js"></script>
+<script>
+  // Only redirect already-logged-in users, not users mid-registration/login
+  let authHandledByForm = false;
+  Auth.onAuthStateChanged((fbUser) => {
+    if (fbUser && !authHandledByForm) window.location.href = 'dashboard.html';
+  });
+
+  // Check URL for #register
+  if (window.location.hash === '#register') switchAuthTab('register');
+
+  function switchAuthTab(tab) {
+    const tabs = ['login', 'register', 'forgot'];
+    tabs.forEach(t => {
+      const form = document.getElementById(t + 'Form');
+      if (form) form.classList.toggle('active', t === tab);
+    });
+    document.getElementById('tabLogin')?.classList.toggle('active', tab === 'login');
+    document.getElementById('tabRegister')?.classList.toggle('active', tab === 'register');
+    // Hide tabs row when on forgot screen
+    document.getElementById('authTabs').style.display = tab === 'forgot' ? 'none' : '';
+  }
+
+  async function handleLogin(e) {
+    e.preventDefault();
+    authHandledByForm = true;
+    const errEl = document.getElementById('loginError');
+    const btn   = document.getElementById('loginBtn');
+    errEl.style.display = 'none';
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in…';
+
+    const res = await Auth.login(
+      document.getElementById('loginEmail').value.trim(),
+      document.getElementById('loginPassword').value
+    );
+
+    if (res.ok) {
+      showToast('Welcome back! 🌿', 'success');
+      setTimeout(() => window.location.href = 'dashboard.html', 700);
+    } else {
+      errEl.textContent = res.msg;
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+    }
+  }
+
+  async function handleRegister(e) {
+    e.preventDefault();
+    authHandledByForm = true;
+    const errEl = document.getElementById('registerError');
+    const btn   = document.getElementById('registerBtn');
+    errEl.style.display = 'none';
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account…';
+
+    const res = await Auth.register({
+      name:       document.getElementById('regName').value.trim(),
+      email:      document.getElementById('regEmail').value.trim(),
+      password:   document.getElementById('regPassword').value,
+      age:        document.getElementById('regAge').value,
+      gender:     document.getElementById('regGender').value,
+      conditions: [],
+    });
+
+    if (res.ok) {
+      showToast('Account created! Welcome to VanaOshadhi 🌿', 'success');
+      setTimeout(() => window.location.href = 'dashboard.html', 800);
+    } else {
+      errEl.textContent = res.msg;
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+    }
+  }
+
+  async function handleForgot(e) {
+    e.preventDefault();
+    const errEl     = document.getElementById('forgotError');
+    const successEl = document.getElementById('forgotSuccess');
+    const btn       = document.getElementById('forgotBtn');
+    errEl.style.display     = 'none';
+    successEl.style.display = 'none';
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending…';
+
+    const res = await Auth.sendPasswordReset(
+      document.getElementById('forgotEmail').value.trim()
+    );
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-paper-plane"></i> Send Reset Link';
+
+    if (res.ok) {
+      successEl.textContent = 'Reset link sent! Check your inbox (and spam folder).';
+      successEl.style.display = 'block';
+    } else {
+      errEl.textContent = res.msg;
+      errEl.style.display = 'block';
+    }
+  }
+
+  function togglePwd(id, btn) {
+    const inp = document.getElementById(id);
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+    btn.querySelector('i').className = inp.type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+  }
+</script>
+</body>
+</html>
